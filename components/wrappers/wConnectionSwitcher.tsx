@@ -11,19 +11,19 @@ export default function ConnectionSwitcher(){
     let FoundContext:ContextObject;
     FoundContext = React.useContext(sysContext)
     /**this function is used get to grab the HTTP handler as a short hand*/
-    const [isLoaded, setIsLoaded] = useState(false)
+    const [isConnected, setConnected] = useState(false)
     async function checkConnection(){ 
         try {
             const value = await FoundContext.HTTPHandler.CheckConnection();
-            setIsLoaded(value)
+            setConnected(value)
         } catch (error) {
-            setIsLoaded(false)
+            setConnected(false)
         }
     }
 
     function switchPage(){
         checkConnection()
-        if(!isLoaded){return <NoConnectionScreen/>}
+        if(!isConnected){return <NoConnectionScreen/>}
         if(!FoundContext.readUserProfile?.id){return <SignInSwitcher/>}
         return <HomePage/>
     }

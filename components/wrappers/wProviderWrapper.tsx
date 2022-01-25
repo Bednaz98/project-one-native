@@ -1,4 +1,5 @@
 import React, { useReducer, useState } from "react";
+import { SafeAreaView } from "react-native";
 import HTTPRequestHandler from "../../Project1-GitUtil-Reimbursement/Classes/HTTPRequestHandler";
 import {Profile, Request} from '../../Project1-GitUtil-Reimbursement/Types/Entity';
 
@@ -30,7 +31,7 @@ export const sysContext = React.createContext(contextValue)
 
 
 export default function SuperProvider( {children} ){
-    const useURL:string = 'https://joshua-bednaz-projectone-bendend.azurewebsites.net/';
+    const useURL:string = 'https://project-one-backend-joshuabednaz.azurewebsites.net';
     const temp:Profile = {FirstName: "",LastName: ""}
     const [readUserProfile, setUserProfile] = useState(temp)
     const [HTTPHandler, setHTTPHandler] = useState(new HTTPRequestHandler( useURL,false,3001))
@@ -45,7 +46,7 @@ export default function SuperProvider( {children} ){
 
     return(<>
         <sysContext.Provider value = { {...readState} }>
-            {children}
+                {children}
         </sysContext.Provider>
     
     </>)

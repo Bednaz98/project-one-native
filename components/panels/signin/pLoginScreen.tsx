@@ -1,4 +1,7 @@
 import React, { useState } from "react"
+import { View } from "react-native"
+import { StyleButton, StyleInputText, StyleText } from "../../../BasicComponents/BasicComponent"
+import { textType } from "../../../BasicComponents/StyleSheet"
 import HTTPRequestHandler from "../../../Project1-GitUtil-Reimbursement/Classes/HTTPRequestHandler"
 import { LoginReturn } from "../../../Project1-GitUtil-Reimbursement/Types/dto"
 import { ContextObject, sysContext, SysReducerAction } from "../../wrappers/wProviderWrapper"
@@ -18,30 +21,28 @@ export default function LoginScreen(props){
         let Login:LoginReturn;
         try {
             const TempHelper = FoundContext.HTTPHandler
+            console.log('http handler being called')
             Login = await TempHelper.Login(userName,userPassword)
+            console.log('http handler complete')
             if(Login.ReturnProfile.id){
                 FoundContext.setUserProfile({...Login.ReturnProfile}); 
                 FoundContext.SetHTTPHandler(TempHelper )
             }
 
         } catch (error) {
-            console.log("Login Failed")
+            console.log('login failed',error)
         }
-        
     }
 
-    function SetPassword(event){setStatePassword(event.target.value)};
-    function SetUserName(event){setStateUserName(event.target.value)};
-
     return(<>
-        <h1>Welcome to the new reimbursement system Website</h1>
-        <table>
-            <tbody>
-                <tr> <td><h4>Username</h4> </td> <td><input onChange={SetUserName} type="text" size={30}/></td> </tr>
-                <tr> <td><h4>Password</h4> </td> <td><input onChange={SetPassword} type="text" size={30}/></td> </tr>
-                <tr> <button onClick={TryLogin}> Login </button></tr>
-                <tr> <button onClick={()=> dispatchCreateScreen()}> Create an account?</button></tr>
-            </tbody>
-        </table>
+        {StyleText("Welcome to Reimburse (TM)", textType.PageTitle)} 
+        <View style={[ {   flexDirection: "column"  }]}>
+        <View >{StyleInputText(setStateUserName , "Username",userName)}   </View>
+        <View >{StyleInputText(setStatePassword, "Password",userPassword)}   </View>
+            <View style={[{   flexDirection: "row"  }]}> 
+                <View style ={[{flex:1}]}> {StyleButton(()=>dispatchCreateScreen(), "Create Profile")} </View>
+                <View style ={[{flex:1}]}> {StyleButton(()=>TryLogin(), "Login")}</View>
+            </View>
+        </View>
     </>)
 }

@@ -5,7 +5,9 @@ import { RequestStatus } from "../../../Project1-GitUtil-Reimbursement/Types/Enu
 import RequestSelectButton from "../../element/eRequestSelectButton"
 import { sysContext } from "../../wrappers/wProviderWrapper"
 import {v4} from 'uuid';
-import RequestDisplay from "../../element/eRequestDisplay"
+import { StyleButton, StyleText } from "../../../BasicComponents/BasicComponent"
+import { textType } from "../../../BasicComponents/StyleSheet"
+import { FlatList, ScrollView, StatusBar, View } from "react-native"
 
 
 export default function RequestView(props){
@@ -27,50 +29,16 @@ export default function RequestView(props){
 
         return () => {}}, []);
 
-        async function SetRequestStatus(type:RequestStatus, Message:string){
-            switch(type){
-                case RequestStatus.deleted:{   
-                    const t = await FoundContext.HTTPHandler.DeleteRequest(FoundContext.readUserProfile.id,RequestID.id )
-                    if(t.ResultCheck){
-                        const temp = RequestID;
-                        temp.RequestStatus = RequestStatus.deleted;
-                        setSetRequest({...temp});
-                        DisplayRequestButtons()
-                    }
-                    ;break
-                }
-                case RequestStatus.Denied:{   
-                    const t = await FoundContext.HTTPHandler.ManagerChangeRequest(FoundContext.readUserProfile.id,RequestID.id,RequestStatus.Denied, Message )
-                    if(t){
-                        const temp = RequestID;
-                        temp.RequestStatus = RequestStatus.Denied;
-                        setSetRequest({...temp});
-                        DisplayRequestButtons()
-                    }
-                    ;break
-                }
-                case RequestStatus.Approved:{   
-                    const t = await FoundContext.HTTPHandler.ManagerChangeRequest(FoundContext.readUserProfile.id,RequestID.id,RequestStatus.Approved, Message )
-                    if(t){
-                        const temp = RequestID;
-                        temp.RequestStatus = RequestStatus.Approved;
-                        setSetRequest({...temp});
-                        DisplayRequestButtons()
-                    }
-                    ;break
-                }
-            }
-        }
 
     async function DisplayRequestButtons(){
         if(ManagerMode){
             const transferArray = await FoundContext.HTTPHandler.GetAllSentRequestOfType(FoundContext.readUserProfile.id,RequestType )
             console.log(transferArray)
             if(! (transferArray.ReturnRequestArray.length >0) ) { 
-                setButtonDisplay([<h4> No request found </h4>] )
+                setButtonDisplay([ StyleText('No Request Found') ] )
                 return;
             } 
-            setButtonDisplay(   transferArray.ReturnRequestArray.map( (e)=> <tr><RequestSelectButton key = {v4()} InputRequest ={e} setSetRequest={setSetRequest}/></tr>) )
+            setButtonDisplay(   transferArray.ReturnRequestArray.map( (e)=> <tr><RequestSelectButton key = {v4()} InputRequest ={e} setSetRequest={setSetRequest} ManagerMode={ManagerMode}/></tr>) )
             
         }
         else{
@@ -80,27 +48,34 @@ export default function RequestView(props){
                 setButtonDisplay([<h4> No request found </h4>] )
                 return;
             } 
-            setButtonDisplay(   transferArray.ReturnRequestArray.map( (e)=> <tr><RequestSelectButton key = {v4()} InputRequest ={e} setSetRequest={setSetRequest}/></tr>) )
+            setButtonDisplay(   transferArray.ReturnRequestArray.map( (e)=> <tr><RequestSelectButton key = {v4()} InputRequest ={e} setSetRequest={setSetRequest} DisplayRequestButtons={DisplayRequestButtons}/></tr>) )
 
         }
         
     }
 
-    function RequestTitle(){
-        if(ManagerMode){return(<>Incoming Request</>)}
-        return(<>Your  Request</>)
-    }
-
     return( <>
-        <h2>Your Request</h2>
-        <table>
-            <thead> <td>{RequestTitle()}</td> <td>||</td> <td>Selected Request</td> </thead>
-            <tbody>
-                <td>{ButtonDisplay}</td>
-                <td>||</td>
-                <td><RequestDisplay RequestID={ RequestID} ManagerMode={ManagerMode}   SetRequestStatus= {SetRequestStatus}/></td>
-            </tbody>
-        </table>
-
+        <View style = {{padding:20}}> {StyleButton( ()=> {setButtonDisplay([<></>]); DisplayRequestButtons();} , 'Refresh') } </View>
+        <View style={[ {   flexDirection: "column"  }]} >
+            <ScrollView style={styles.scrollView}>
+                {ButtonDisplay} 
+            </ScrollView>
+        </View>
+        
     </>)
 }
+
+
+const styles = ({
+    container: {
+      flex: 1,
+      paddingTop: StatusBar.currentHeight,
+    },
+    scrollView: {
+      backgroundColor: '#222222',
+      marginHorizontal: 20,
+    },
+    text: {
+      fontSize: 42,
+    },
+  });

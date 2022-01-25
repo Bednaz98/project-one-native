@@ -1,12 +1,17 @@
 import React from "react";
 import { Button, View } from "react-native";
+import { StyleButton } from "../../BasicComponents/BasicComponent";
 
 export default function NavigationBar(props){
-    const {switchTab} = props;
+    const setActiveTab:React.Dispatch<React.SetStateAction<number>> = props.setFunc;
     return (
-        <View>
-            <View> <Button onPress={switchTab(0)} title="Your Profile"/>
-            </View>
+        <View style={[ {   flexDirection: "row"  }]}>
+            <View > {StyleButton(()=>setActiveTab(0), 'Your Profile')} </View>
+            <View > {StyleButton(()=>setActiveTab(1), 'Your Request')} </View>
+            <View > {StyleButton(()=>setActiveTab(2), 'Make Request')} </View>
+            <View > {StyleButton(()=>setActiveTab(3), 'Manage Request')} </View>
+            <View > {StyleButton(()=>setActiveTab(4), 'Statistics')} </View>
+            <View > {StyleButton(()=>setActiveTab(5), 'Admin Tools')} </View>
         </View>
     )
 }
