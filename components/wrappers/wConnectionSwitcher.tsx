@@ -8,8 +8,7 @@ import SignInSwitcher from "./wSigninSwitcher"
 
 export default function ConnectionSwitcher(){
     // Basic setup to get all context and dispatcher short hand %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    let FoundContext:ContextObject;
-    FoundContext = React.useContext(sysContext)
+    const  FoundContext:ContextObject =React.useContext(sysContext)
     /**this function is used get to grab the HTTP handler as a short hand*/
     const [isConnected, setConnected] = useState(false)
     async function checkConnection(){ 

@@ -8,6 +8,7 @@ import {v4} from 'uuid';
 import { StyleButton, StyleText } from "../../../BasicComponents/BasicComponent"
 import { textType } from "../../../BasicComponents/StyleSheet"
 import { FlatList, ScrollView, StatusBar, View } from "react-native"
+import { TransferRequestArray } from "../../../Project1-GitUtil-Reimbursement/Types/dto"
 
 
 export default function RequestView(props){
@@ -32,23 +33,31 @@ export default function RequestView(props){
 
     async function DisplayRequestButtons(){
         if(ManagerMode){
-            const transferArray = await FoundContext.HTTPHandler.GetAllSentRequestOfType(FoundContext.readUserProfile.id,RequestType )
-            console.log(transferArray)
+            let transferArray:TransferRequestArray;
+            try {
+                transferArray = await FoundContext.HTTPHandler.ManagerGetAllRequest(FoundContext.readUserProfile.id)
+            } catch (error) {
+                setButtonDisplay([ StyleText('No Request Found') ] );return;
+            }
+            transferArray = await FoundContext.HTTPHandler.GetAllSentRequestOfType(FoundContext.readUserProfile.id,RequestType )
             if(! (transferArray.ReturnRequestArray.length >0) ) { 
-                setButtonDisplay([ StyleText('No Request Found') ] )
-                return;
+                setButtonDisplay([ StyleText('No Request Found') ] );return;
             } 
-            setButtonDisplay(   transferArray.ReturnRequestArray.map( (e)=> <tr><RequestSelectButton key = {v4()} InputRequest ={e} setSetRequest={setSetRequest} ManagerMode={ManagerMode}/></tr>) )
+            setButtonDisplay(   transferArray.ReturnRequestArray.map( (e)=> <RequestSelectButton key = {v4()} InputRequest ={e} setSetRequest={setSetRequest} ManagerMode={ManagerMode}/>) )
             
         }
         else{
-            const transferArray = await FoundContext.HTTPHandler.ManagerGetAllRequest(FoundContext.readUserProfile.id)
-            console.log(transferArray)
+            let transferArray:TransferRequestArray;
+            try {
+                transferArray = await FoundContext.HTTPHandler.ManagerGetAllRequest(FoundContext.readUserProfile.id)
+            } catch (error) {
+                setButtonDisplay([StyleText('No Request Found')] );return;
+            }
             if(! (transferArray.ReturnRequestArray.length >0) ) { 
-                setButtonDisplay([<h4> No request found </h4>] )
+                setButtonDisplay([StyleText('No Request Found')] )
                 return;
             } 
-            setButtonDisplay(   transferArray.ReturnRequestArray.map( (e)=> <tr><RequestSelectButton key = {v4()} InputRequest ={e} setSetRequest={setSetRequest} DisplayRequestButtons={DisplayRequestButtons}/></tr>) )
+            setButtonDisplay(   transferArray.ReturnRequestArray.map( (e)=> <RequestSelectButton key = {v4()} InputRequest ={e} setSetRequest={setSetRequest} DisplayRequestButtons={DisplayRequestButtons}/>) )
 
         }
         
