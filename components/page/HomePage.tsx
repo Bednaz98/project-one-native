@@ -37,8 +37,8 @@ export default function HomePage(){
         }
     }
     return(<>
-    <View style={{padding:50}}> {StyleText(pageTitle,textType.PageTitle)} </View>
-    <View style={[ {   flexDirection: "column"  }]}>
+    <View style={[ {   flexDirection: "column", justifyContent:"center", alignContent:"center"  }]}>
+        <View style={{padding:50}}> {StyleText(pageTitle,textType.PageTitle)} </View>
         <NavigationBar setFunc={ change }/>
         {switchActiveTable()}
     </View>

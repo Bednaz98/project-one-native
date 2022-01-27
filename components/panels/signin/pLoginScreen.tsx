@@ -30,7 +30,7 @@ export default function LoginScreen(props){
             }
 
         } catch (error) {
-            console.log('login failed',error)
+            console.log('login failed', error)
         }
     }
 

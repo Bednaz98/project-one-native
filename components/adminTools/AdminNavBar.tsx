@@ -8,7 +8,7 @@ export default function AdminNavBar(props){
     const setAdminIndex:React.Dispatch<React.SetStateAction<number>> = props.setAdminIndex
 
     return(
-    <View style={[ {   flexDirection: "row"  }]}>
+    <View style={[ {   flexDirection: "row", justifyContent:"center", alignContent:"center"  }]}>
         <View> {StyleButton(()=>{setAdminIndex(0)}, 'View All Profiles',buttonType.adminStyle )} </View>
         <View> {StyleButton(()=>{setAdminIndex(1)}, 'View All Request',buttonType.adminStyle)} </View>
         <View> {StyleButton(()=>{setAdminIndex(2)}, 'Create Profile',buttonType.adminStyle)} </View>

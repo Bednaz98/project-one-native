@@ -20,7 +20,7 @@ export default function NavigationBar(props){
     
     useEffect(() => {
         setPermissions()
-      return () => {};},);
+        return () => {};},);
     
 
     function ShowManagerOpts(){

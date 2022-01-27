@@ -1,8 +1,12 @@
 import { ButtonColor, buttonType, InputTextComponentStyle, InputTextType, TextStyle, textType, iTSB} from "./StyleSheet";
 import { View, Text, Button, TextInput, SafeAreaView } from "react-native";
 
+
+export enum TextJustification{
+
+}
 export function StyleText(text:string,type:textType =textType.GeneralText  ){
-    return( <View style={[{padding: 3}]} ><Text style={ TextStyle(type)}>{text}</Text></View>)
+    return( <View style={[{padding: 3, alignContent:"center"}]} ><Text style={ TextStyle(type)}>{text}</Text></View>)
 }
 
 export function StyleButton(func:Function, text:string,type:buttonType =buttonType.normal, enabled:boolean = true ){

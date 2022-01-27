@@ -17,7 +17,7 @@ export default function UserProfile(){
     const [password, setPassword] = useState('');
     async function GetManagerName(){
         try {
-            const Result = await FoundContext.HTTPHandler.GetManagerName('')
+            const Result = await FoundContext.HTTPHandler.GetManagerName(getProfileValues().ManagerID)
             if(Result.ReturnString.length > 1) { setManagerName(Result.ReturnString)  }
         } catch (error) {
             console.log('error trying to get manager name')
@@ -45,6 +45,7 @@ export default function UserProfile(){
                     setFirstName( FoundContext.readUserProfile.FirstName)
                     setLastName( FoundContext.readUserProfile.LastName)
                     setPassword( FoundContext.readUserProfile.Password)
+                    GetManagerName()
 
                 }
     
@@ -90,7 +91,7 @@ export default function UserProfile(){
             <View >{StyleInputText(setFirstName , "First Name",firstName, true, ()=>{changeFirstName()})}   </View>
             <View >{StyleInputText(setLastName , "Last Name",lastName , true,()=>{changeLastName()})}   </View>
             <View >{StyleInputText(setPassword , "Password",password, true, ()=>{changePassword()})}   </View>
-            <View >{StyleText(managerName)}  </View>
+            <View style={{flexDirection:"row", backgroundColor:"#112244"}}>{StyleText('Manager: ')}  {StyleText(managerName)}  </View>
         </View>
     </>)
 }
