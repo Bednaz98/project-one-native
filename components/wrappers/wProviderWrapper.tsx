@@ -15,7 +15,10 @@ export interface ContextObject{
     HTTPHandler:HTTPRequestHandler
     readUserProfile:Profile 
     setUserProfile:React.Dispatch<React.SetStateAction<Profile>> 
-    SetHTTPHandler:React.Dispatch<React.SetStateAction<HTTPRequestHandler>> 
+    SetHTTPHandler:React.Dispatch<React.SetStateAction<HTTPRequestHandler>>,
+    loading:boolean
+    setLoading:React.Dispatch<React.SetStateAction<boolean>>
+    dev:boolean
 }
 
 
@@ -25,22 +28,29 @@ const contextValue: ContextObject = {
     readUserProfile: {FirstName: "",LastName: ""},
     setUserProfile: ()=>{},
     SetHTTPHandler: ()=>{},
+    loading:false,
+    setLoading:()=>{},
+    dev:true
 }
 export const sysContext = React.createContext(contextValue)
 
 
 
 export default function SuperProvider( {children} ){
-    const useURL:string = 'https://project-one-backend-joshuabednaz.azurewebsites.net';
+    const useURL:string ='https://project-one-backend-joshuabednaz.azurewebsites.net';
     const temp:Profile = {FirstName: "",LastName: ""}
     const [readUserProfile, setUserProfile] = useState(temp)
     const [HTTPHandler, setHTTPHandler] = useState(new HTTPRequestHandler( useURL,-1))
+    const [loading, setLoading] = useState(true);
     /**re-assignment so typescript is happy assign to 'any'*/
     const readState:ContextObject = {
         HTTPHandler: HTTPHandler,
         readUserProfile,
         setUserProfile: setUserProfile,
-        SetHTTPHandler: setHTTPHandler
+        SetHTTPHandler: setHTTPHandler,
+        loading:loading,
+        setLoading: setLoading,
+        dev:false
     };
 
 

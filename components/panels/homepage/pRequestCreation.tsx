@@ -21,31 +21,53 @@ export default function RequestCreation(){
             if(String(RequestAmount) === 'NaN') {console.log(RequestAmount);setStateAmount(0); setSendEnabled(false)} 
         },500)
     }
+
     async function SendRequest(){
-        const T:TransferRequest =  await FoundContext.HTTPHandler.MakeRequest('', RequestAmount,RequestMessage)
+        const T:TransferRequest =  await FoundContext.HTTPHandler.MakeRequest('ID', RequestAmount,RequestMessage)
         if(T){
             setShowUpdateScreen(true); 
             setStateAmount(0);
             setRequestMessage('');
             return }
-        console.log('Request failed');
+        else{
+            setStateAmount(0);
+            setRequestMessage('');
+            console.log('Request failed');
+        }
     }
 
     function RequestSubmitView(){
         return (<>
             <View>
                 <View style={{padding:50}}> {StyleText('Thank you for making a request',textType.HeaderSection)} </View>
-                <View> {StyleButton( ()=> setShowUpdateScreen(false), 'create new request')} </View>
+                <View style={{flexDirection:"row"}}>
+                    <View style={{flex:1}}/>
+                    <View style={{flex:3}}> {StyleButton( ()=> setShowUpdateScreen(false), 'create new request')} </View>
+                    <View style={{flex:1}}/>
+                </View>
             </View>
         </>)
     }
     function RequestCreateView(){
         return(<>
             <View>
-                <View style={{padding:50}}>{StyleText("Create Your Request",textType.HeaderSection)} </View>
-                <View >{StyleInputText(ConvertAmountToText  , "Amount", (()=> { let temp = RequestAmount; return String(temp)}) () )}   </View>
-                <View >{StyleInputText( setRequestMessage , "Description",RequestMessage)} </View>
-                <View >{StyleButton(()=>{ SendRequest()},'Send Request',buttonType.normal,SendEnabled ) }  </View>
+                <View style={{padding:10, alignItems:"center", justifyContent:"center"}}>
+                    <View style={{alignContent:"center", justifyContent:"center"}}>
+                        {StyleText("Create Your Request",textType.HeaderSection)} 
+                    </View>
+                    
+                </View>
+                <View >
+                    {StyleInputText(ConvertAmountToText  , "Amount", (()=> { let temp = RequestAmount; return String(temp)}) () )}   
+                </View>
+                <View >
+                    {StyleInputText( setRequestMessage , "Description",RequestMessage)} 
+                </View>
+                <View style={{padding:10, flexDirection:"row"}}>
+                    <View style={{flex:1}}/>
+                    <View style={{flex:3}} > {StyleButton(()=>{ SendRequest()},'Send Request',buttonType.normal,SendEnabled ) }  </View> 
+                    <View style={{flex:1}}/>
+                </View>
             </View>
         </>)
     }
@@ -58,12 +80,3 @@ export default function RequestCreation(){
         {SwitchDisplayView()}
     </>)
 }
-
-{/* <h1>Make a Request</h1>
-        <table>
-            <tbody>
-            <tr> <td><h4>Request Amount</h4></td>   <td>    <input defaultValue={ RequestAmount}    onChange={SetAmount} type="number" size={30}/></td> </tr>
-            <tr> <td><h4> Added Message </h4> </td>    <td>    <input defaultValue={ RequestMessage}      onChange={SetMessage} type="text" size={30}/></td> </tr>
-            </tbody>
-        </table>
-        <button onClick={ ()=>{SendRequest()} }>  Submit Request </button > */}

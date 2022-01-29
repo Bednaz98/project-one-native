@@ -86,22 +86,18 @@ export default function UserProfile(){
 
     return (<>
         <View>  
-            <View>  {StyleButton(()=>{TryLogin()}, 'Refresh')  }  </View>
+            <View style={{flexDirection:"row"}}>
+                <View style={{flex:1}}/>
+                <View style={{flex:3}}>  {StyleButton(()=>{TryLogin()}, 'Refresh')  }  </View>
+                <View style={{flex:1}}/>
+            </View>
+            
             <View >{StyleText( `Username: ${FoundContext .readUserProfile.id} `) }   </View>
             <View >{StyleInputText(setFirstName , "First Name",firstName, true, ()=>{changeFirstName()})}   </View>
             <View >{StyleInputText(setLastName , "Last Name",lastName , true,()=>{changeLastName()})}   </View>
             <View >{StyleInputText(setPassword , "Password",password, true, ()=>{changePassword()})}   </View>
-            <View style={{flexDirection:"row", backgroundColor:"#112244"}}>{StyleText('Manager: ')}  {StyleText(managerName)}  </View>
+            <View style={{flexDirection:"row"}}>{StyleText('Manager: ')}  {StyleText(managerName)}  </View>
         </View>
     </>)
 }
 
-{/* <table>
-            <tbody>
-            <tr> <td><h4>UserName</h4></td>         <td>    <input defaultValue={ getProfileValues().id} type="text" size={30}/></td> </tr>
-            <tr> <td><h4>First Name</h4> </td>      <td>    <input defaultValue={ getProfileValues().FirstName} type="text" size={30}/></td> </tr>
-            <tr> <td><h4>Last Name</h4></td>        <td>    <input defaultValue={ getProfileValues().LastName} type="text" size={30}/></td> </tr>
-            <tr> <td><h4>Password</h4> </td>        <td>    <input defaultValue={ getProfileValues().Password} type="text" size={30}/></td> </tr>
-            <tr> <td><h4>Manager</h4> </td>         <td>    <h4> {managerName } </h4> </td> </tr>
-            </tbody>
-        </table> */}

@@ -27,18 +27,22 @@ export default function CreateProfileScreen(props){
             FoundContext.setUserProfile(UserProfile.ReturnProfile) }
     }
     
-    return (<>
-        {StyleText("Create A Profile", textType.PageTitle)}
-    <View style={[ {   flexDirection: "column"  }]}>
-        <View >{StyleInputText(setStateFirstName, "First Name",userFirstName)}   </View>
-        <View >{StyleInputText(setStateLastName, "Last Name", userLastName)}  </View>
-        <View >{StyleInputText(setStateUserName, "Username", userName)}  </View>
-        <View >{StyleInputText(setStatePassword, "Password", userPassword)} </View>
-        <View style={[{   flexDirection: "row"  }]}> 
-            <View style ={[{flex:1}]}> {StyleButton(()=>dispatchCreateScreen(), "Back to Login")} </View>
-            <View style ={[{flex:1}]}> {StyleButton(()=>TryCreateProfile(), "Submit")}</View>
+    return (
+        <View style={{ alignItems:"center",justifyContent:"center" }} >
+            <View> {StyleText("Create Your Profile", textType.PageTitle)} </View>
+            <View style={{ flexDirection:"row",alignItems:"center" }}> 
+                <View style={{flex:1, flexDirection:"column"}}>
+                    <View >{StyleInputText(setStateFirstName, "First Name",userFirstName)}   </View>
+                    <View >{StyleInputText(setStateLastName, "Last Name", userLastName)}  </View>
+                    <View >{StyleInputText(setStateUserName, "Username", userName)}  </View>
+                    <View >{StyleInputText(setStatePassword, "Password", userPassword)} </View>
+                    <View style={{   flexDirection: "row"  }}> 
+                        <View style ={{flex:1}}> {StyleButton(()=>dispatchCreateScreen(), "Back to Login")} </View>
+                        <View style ={{flex:1}}> {StyleButton(()=>TryCreateProfile(), "Submit")}</View>
+                    </View>
+                </View>
+            </View>
         </View>
-    </View>
-    </>)
+    )
 }
 

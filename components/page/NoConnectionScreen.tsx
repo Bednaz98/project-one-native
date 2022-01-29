@@ -1,11 +1,13 @@
 import { View, Text } from "react-native"
+import loadingIcon, { StyleText } from "../../BasicComponents/BasicComponent"
+import { textType } from "../../BasicComponents/StyleSheet"
 
 
 
 export default function NoConnectionScreen(){
     return(
         <View style={{ alignItems: 'center', justifyContent: 'center', }}>
-            <Text style={{ fontSize:100, color:"floralwhite" }} >Sorry, Cannot Connect...</Text>
-            <Text style={{ fontSize:40, color:"floralwhite" }}>The Server might be down, try again later</Text>
+            {StyleText('Sorry, Cannot Connect...',textType.PageTitle)}
+            {StyleText('The Server might be down, try again later',textType.HeaderSection)}
         </View>)
 }

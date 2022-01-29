@@ -5,51 +5,62 @@ import { RequestStatus } from "../../../Project1-GitUtil-Reimbursement/Types/Enu
 import RequestSelectButton from "../../element/eRequestSelectButton"
 import { sysContext } from "../../wrappers/wProviderWrapper"
 import {v4} from 'uuid';
-import { StyleButton, StyleText } from "../../../BasicComponents/BasicComponent"
+import { StyleButton, StyleScrollView, StyleText } from "../../../BasicComponents/BasicComponent"
 import { textType } from "../../../BasicComponents/StyleSheet"
-import { FlatList, ScrollView, StatusBar, View } from "react-native"
-import { TransferRequestArray } from "../../../Project1-GitUtil-Reimbursement/Types/dto"
+import {ScrollView, StatusBar, View } from "react-native"
+import { ResultReturnCheck, TransferRequestArray } from "../../../Project1-GitUtil-Reimbursement/Types/dto"
+
 
 
 export default function RequestView(props){
-    const ManagerMode:boolean = props.ManagerMode
+    const mode:boolean = props.ManagerMode
     const FoundContext = React.useContext(sysContext)
 
     // Initialization vars=============================
     const NullRequest:Request = {Amount: 0, RequestStatus:0,PostDate: 0}
-    const Type: RequestStatus = RequestStatus.All
     //=================================================
     const [RequestID, setSetRequest] = useState(NullRequest)
-    const [RequestType, setRequestType] = useState(Type)
+    const [RequestType, setRequestType] = useState(RequestStatus.All)
     const [ButtonDisplay, setButtonDisplay] = useState([<></>])
+    const [isAdmin, AdminAccess] = useState(false)
+
 
 
     useEffect(() => {
-        setButtonDisplay([<></>])
         DisplayRequestButtons();
-
+        if(mode){checkAdmin()}
         return () => {}}, []);
 
-
+    async function checkAdmin(){
+        try {
+            const Result:ResultReturnCheck = await FoundContext.HTTPHandler.CheckAdminPermissions()
+            AdminAccess(Result.ResultCheck)
+        } catch (error) {
+            AdminAccess(false)
+        }
+    }
     async function DisplayRequestButtons(){
-        if(ManagerMode){
+        if(mode){
             let transferArray:TransferRequestArray;
             try {
+                console.log('manager refresh')
                 transferArray = await FoundContext.HTTPHandler.ManagerGetAllRequest(FoundContext.readUserProfile.id)
+                console.log('no error')
+                if(! (transferArray.ReturnRequestArray.length >0) ) { 
+                    setButtonDisplay([ StyleText('No Request Found') ] );return;
+                } 
+                else{
+                    setButtonDisplay(   transferArray.ReturnRequestArray.map( (e)=> <RequestSelectButton key = {v4()} InputRequest ={e} setSetRequest={setSetRequest} ManagerMode={mode}/>) )
+                }
             } catch (error) {
                 setButtonDisplay([ StyleText('No Request Found') ] );return;
             }
-            transferArray = await FoundContext.HTTPHandler.GetAllSentRequestOfType(FoundContext.readUserProfile.id,RequestType )
-            if(! (transferArray.ReturnRequestArray.length >0) ) { 
-                setButtonDisplay([ StyleText('No Request Found') ] );return;
-            } 
-            setButtonDisplay(   transferArray.ReturnRequestArray.map( (e)=> <RequestSelectButton key = {v4()} InputRequest ={e} setSetRequest={setSetRequest} ManagerMode={ManagerMode}/>) )
-            
         }
         else{
             let transferArray:TransferRequestArray;
             try {
-                transferArray = await FoundContext.HTTPHandler.ManagerGetAllRequest(FoundContext.readUserProfile.id)
+                console.log('general refresh')
+                transferArray = await FoundContext.HTTPHandler.GetAllSentRequestOfType(FoundContext.readUserProfile.id, RequestType)
             } catch (error) {
                 setButtonDisplay([StyleText('No Request Found')] );return;
             }
@@ -58,33 +69,44 @@ export default function RequestView(props){
                 return;
             } 
             setButtonDisplay(   transferArray.ReturnRequestArray.map( (e)=> <RequestSelectButton key = {v4()} InputRequest ={e} setSetRequest={setSetRequest} DisplayRequestButtons={DisplayRequestButtons}/>) )
-
         }
         
     }
+    function FilterSearch(type:RequestStatus){
+        setRequestType(type);
+        setTimeout(() => {
+            DisplayRequestButtons();
+        }, 50);
+    }
 
-    return( <>
-        <View style = {{padding:20}}> {StyleButton( ()=> {setButtonDisplay([<></>]); DisplayRequestButtons();} , 'Refresh') } </View>
-        <View style={[ {   flexDirection: "column"  }]} >
-            <ScrollView style={styles.scrollView}>
-                {ButtonDisplay} 
-            </ScrollView>
+    function displayAdminButton(){
+        if(isAdmin){ return( <View style={{flex:1}}> {StyleButton( ()=> FilterSearch(RequestStatus.deleted) ,'Deleted')} </View>  ) } }
+
+    return(
+    <View style={{flexDirection:"column", justifyContent:"center"}}>
+        <View style={{flexDirection:"row"}}> 
+            <View style={{flex:1}}/>
+            <View style={{flex:5, alignItems:"center",justifyContent:"center"}}> {StyleText(`Filter: ${RequestStatus[RequestType]}`, textType.HeaderSection)} </View>
+            <View style={{flex:1}}/>
         </View>
-        
-    </>)
+        <View style={ { flexDirection: "row" }}>  
+            <View style={{flex:1}}/>
+            <View style={{flex:1}}> {StyleButton(()=>FilterSearch(RequestStatus.All) ,'All')} </View>
+            <View style={{flex:1}}> {StyleButton(()=>FilterSearch(RequestStatus.Pending) ,'Pending')} </View>
+            <View style={{flex:1}}> {StyleButton(()=>FilterSearch(RequestStatus.Denied) ,'Denied')} </View>
+            <View style={{flex:1}}> {StyleButton(()=>FilterSearch(RequestStatus.Approved) ,'Approved')}</View>
+            {displayAdminButton()}
+            <View style={{flex:1}}/>
+        </View>
+        <View style={{flexDirection:"row"}}>
+            <View style={{flex:1}}/>
+            <View style={{flex:6}}> {StyleButton( ()=> {()=>DisplayRequestButtons();} , 'Refresh') }  </View>
+            <View style={{flex:1}}/>
+        </View>
+        <View style={{padding:10}}>
+        <StyleScrollView>
+                {ButtonDisplay}
+            </StyleScrollView>
+        </View>
+    </View>)
 }
-
-
-const styles = ({
-    container: {
-      flex: 1,
-      paddingTop: StatusBar.currentHeight,
-    },
-    scrollView: {
-      backgroundColor: '#222222',
-      marginHorizontal: 20,
-    },
-    text: {
-      fontSize: 42,
-    },
-  });

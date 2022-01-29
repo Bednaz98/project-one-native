@@ -6,20 +6,13 @@ import SuperProvider from './components/wrappers/wProviderWrapper';
 
 export default function App() {
   return (
-    <View style={styles.container}>
+    <View style={{backgroundColor: '#444444', flex:1, alignItems:"center",justifyContent:"center" } }>
       <SuperProvider>
-        < ConnectionSwitcher/>
+        <View style={{height:"auto", width:"auto", alignItems:"center",justifyContent:"center"}}>
+          < ConnectionSwitcher/>
+        </View>
       </SuperProvider>
       <StatusBar style="auto" />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#045',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

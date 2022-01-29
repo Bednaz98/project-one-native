@@ -16,8 +16,8 @@ export default function DisplayRecords(){
 
     useEffect(() => {
         DisplayRecords()
+
         return () => {};}, []);
-    
 
     return(
     <View>

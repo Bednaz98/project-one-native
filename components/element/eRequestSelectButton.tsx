@@ -1,11 +1,12 @@
 import { Request } from "../../Project1-GitUtil-Reimbursement/Types/Entity";
 import { RequestStatus } from "../../Project1-GitUtil-Reimbursement/Types/Enums";
 import {v4} from 'uuid';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, Modal, StyleProp, View, ViewStyle } from "react-native";
-import { StyleButton, StyleInputText, StyleText } from "../../BasicComponents/BasicComponent";
+import { StyleButton, StyleInputText, StyleModal, StyleText } from "../../BasicComponents/BasicComponent";
 import { buttonType, textType } from "../../BasicComponents/StyleSheet";
 import { sysContext } from "../wrappers/wProviderWrapper";
+import DataProcessor from "../../Project1-GitUtil-Reimbursement/Classes/DataProcessor";
 
 
 export default function RequestSelectButton(props){
@@ -15,12 +16,30 @@ export default function RequestSelectButton(props){
     const NullRequest:Request = {Amount: 0, RequestStatus:0,PostDate: 0}
     const Type: RequestStatus = RequestStatus.All
     //=================================================
+    const proc:DataProcessor = new DataProcessor()
     const InputRequest:Request = props.InputRequest
+    const ID:string = proc.ExtractRequestIDs(InputRequest.id)[1]
     const setSetRequest:Function = props.setSetRequest
     const DisplayRequestButtons:Function = props.DisplayRequestButtons
-    const ManagerMode:boolean = props.ManagerMode;
+    const ManagerMode:boolean = ( true===  props.ManagerMode);
     const [modalVisible, setModalVisible] = useState(false);
     const [sendMessage, setSendMessage] = useState('');
+    const [displayName, setDisplayName] = useState('');
+
+    async function GetName(){
+        try {
+            const Result = await FoundContext.HTTPHandler.GetManagerName(ID);
+            setDisplayName(Result.ReturnString)
+        } catch (error) {
+            setDisplayName('')
+        }
+    }
+    
+    useEffect(() => {
+        GetName()
+        return () => {};},[]);
+    
+
 
     function ConvertPostedDate():string{
         const Display = (new Date(InputRequest?.PostDate)).toLocaleDateString()
@@ -87,40 +106,28 @@ export default function RequestSelectButton(props){
         }
     }
 
-    return ( <>
-    <View> 
-            <Modal animationType="slide" transparent={true}  visible={modalVisible}  onRequestClose={() => {
-                    Alert.alert("Modal has been closed.");
-                    setModalVisible(!modalVisible);
-                }}>
-                    <View style={styles}>
-                        <View> {StyleText('Reimbursement', textType.HeaderSection)}  </View>
-                        <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center',}}>
-                            <View> {StyleText('Post Date') } </View> <View> {StyleText(ConvertPostedDate()) } </View>
-                            <View> {StyleText('Modified date') } </View> <View> {StyleText(ConvertModDate()) } </View>
-                        </View>
-                        <View style={{flexDirection: 'row',justifyContent: 'center', alignItems: 'center', backgroundColor:'#2233aa'}}>
-                            <View style ={{padding:5}} > {StyleText('Amount: ') } </View> <View style ={{padding:5}} > {StyleText('500') } </View>
-                            <View style ={{padding:5}} > {StyleText('Status: ') } </View> <View style ={{padding:5}} > {StyleText(grabStatus()) } </View>
-                        </View>
-                        <View style={{flexDirection: 'row'}}>  {StyleText('Request Reason: ')}  {StyleText(InputRequest.InputMessage)} </View>
-                        <View style={{flexDirection: 'row'}}>  {StyleText('Manager Response: ')}  {StyleText(InputRequest.ManagerMessage)} </View>
-                        <View >{  displayButtonOptions()  }</View>
-                        <View style={{padding:10}} >{StyleButton(()=> setModalVisible(false), ' X ', buttonType.exist )}</View>
-                    </View>
-            </Modal>   
-    </View>
-        <View>
-            {StyleButton(()=> setModalVisible(true),`${ConvertPostedDate()}: $${ InputRequest.Amount}, ${grabStatus()}` )}
-        </View>
-    
-    </>)
-}
+    function GetInnerModal(){
+        return(
+        <View >
+            <View> {StyleText('Reimbursement', textType.HeaderSection)}  </View>
+            <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center',}}>
+                <View> {StyleText('Post Date') } </View> <View> {StyleText(ConvertPostedDate()) } </View>
+                <View> {StyleText('Modified date') } </View> <View> {StyleText(ConvertModDate()) } </View>
+            </View>
+            <View style={{flexDirection: 'row',justifyContent: 'center', alignItems: 'center', backgroundColor:'#2233aa'}}>
+                <View style ={{padding:5}} > {StyleText('Amount: ') } </View> <View style ={{padding:5}} > {StyleText('500') } </View>
+                <View style ={{padding:5}} > {StyleText('Status: ') } </View> <View style ={{padding:5}} > {StyleText(grabStatus()) } </View>
+            </View>
+            <View style={{flexDirection: 'row'}}>  {StyleText('Request Reason: ')}  {StyleText(InputRequest.InputMessage)} </View>
+            <View style={{flexDirection: 'row'}}>  {StyleText('Manager Response: ')}  {StyleText(InputRequest.ManagerMessage)} </View>
+            <View >{  displayButtonOptions()  }</View>
+            <View style={{padding:10}} >{StyleButton(()=> setModalVisible(false), ' X ', buttonType.exist )}</View>
+        </View>)
+    }
 
-const styles:StyleProp<ViewStyle> ={
-        flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#334433',
-};
+    return (
+        <>
+            {StyleModal(modalVisible, setModalVisible, GetInnerModal())}
+            {StyleButton(()=> setModalVisible(true),`${displayName} ${ConvertPostedDate()}: $${ InputRequest.Amount}, ${grabStatus()}` )}
+        </>)
+}

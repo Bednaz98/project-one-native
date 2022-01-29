@@ -1,10 +1,9 @@
 import React, { useState } from "react"
 import { View } from "react-native"
-import { StyleButton, StyleInputText, StyleText } from "../../../BasicComponents/BasicComponent"
+import loadingIcon, { StyleButton, StyleInputText, StyleText } from "../../../BasicComponents/BasicComponent"
 import { textType } from "../../../BasicComponents/StyleSheet"
-import HTTPRequestHandler from "../../../Project1-GitUtil-Reimbursement/Classes/HTTPRequestHandler"
 import { LoginReturn } from "../../../Project1-GitUtil-Reimbursement/Types/dto"
-import { ContextObject, sysContext, SysReducerAction } from "../../wrappers/wProviderWrapper"
+import { sysContext } from "../../wrappers/wProviderWrapper"
 
 
 export default function LoginScreen(props){
@@ -34,15 +33,21 @@ export default function LoginScreen(props){
         }
     }
 
-    return(<>
-        {StyleText("Welcome to Reimburse (TM)", textType.PageTitle)} 
-        <View style={[ {   flexDirection: "column"  }]}>
-        <View >{StyleInputText(setStateUserName , "Username",userName)}   </View>
-        <View >{StyleInputText(setStatePassword, "Password",userPassword)}   </View>
-            <View style={[{   flexDirection: "row"  }]}> 
-                <View style ={[{flex:1}]}> {StyleButton(()=>dispatchCreateScreen(), "Create Profile")} </View>
-                <View style ={[{flex:1}]}> {StyleButton(()=>TryLogin(), "Login")}</View>
+    return(
+    <View style={{alignItems:"center",justifyContent:"center"}}>
+        <View>
+            {StyleText("Stark-Tower Reimburs ™", textType.PageTitle)} 
+        </View>
+        <View>
+            <View style={ {   flexDirection: "column",   }}>
+                <View >{StyleInputText(setStateUserName , "Username",userName)}   </View>
+                <View >{StyleInputText(setStatePassword, "Password",userPassword)}   </View>
+                    <View style={[{   flexDirection: "row"  }]}> 
+                        <View style ={[{flex:1}]}> {StyleButton(()=>dispatchCreateScreen(), "Create Profile")} </View>
+                        <View style ={[{flex:1}]}> {StyleButton(()=>TryLogin(), "Login")}</View>
+                    </View>
             </View>
         </View>
-    </>)
+
+    </View>)
 }
