@@ -72,11 +72,13 @@ export function StyleScrollView({children}){
 
 export function StyleModal(modalVisible:boolean,setModalVisible:Function , children:JSX.Element){
     return(
-        <View>
-            <View style={{alignItems:"center",justifyContent:"center", backgroundColor:GetColor(colorScheme.ColorB)}}>
-                <Modal style={ModalStyle().modalView}animationType="slide" transparent={true}  visible={modalVisible}  onRequestClose={ () =>{setModalVisible(!modalVisible)} } >
-                    {children}
-                </Modal>
+        <View style={{position:"absolute", left:100, top:100}}>
+            <View style={{flex:2, backgroundColor: GetColor(colorScheme.ColorB)}}>
+                    <Modal style={ModalStyle().modalView}animationType="slide" transparent={true}  visible={modalVisible}  onRequestClose={ () =>{setModalVisible(!modalVisible)} } >
+                        <View style={{alignContent:"center", justifyContent:"center",  backgroundColor:GetColor(colorScheme.ColorA)}}>
+                            {children}
+                        </View>
+                    </Modal>
             </View>
         </View>
     )

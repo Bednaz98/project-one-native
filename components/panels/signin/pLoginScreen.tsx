@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { View } from "react-native"
 import loadingIcon, { StyleButton, StyleInputText, StyleText } from "../../../BasicComponents/BasicComponent"
-import { textType } from "../../../BasicComponents/StyleSheet"
+import { colorScheme, GetColor, textType } from "../../../BasicComponents/StyleSheet"
 import { LoginReturn } from "../../../Project1-GitUtil-Reimbursement/Types/dto"
 import { sysContext } from "../../wrappers/wProviderWrapper"
 
@@ -15,10 +15,12 @@ export default function LoginScreen(props){
     const dispatchCreateScreen = props.dispatch
     const [userPassword, setStatePassword] = useState('')
     const [userName, setStateUserName] = useState('')
+    const [logError, setLogError] = useState(false);
 
     async function TryLogin(){
         let Login:LoginReturn;
         try {
+            setLogError(false)
             const TempHelper = FoundContext.HTTPHandler
             console.log('http handler being called')
             Login = await TempHelper.Login(userName,userPassword)
@@ -27,10 +29,21 @@ export default function LoginScreen(props){
                 FoundContext.setUserProfile({...Login.ReturnProfile}); 
                 FoundContext.SetHTTPHandler(TempHelper )
             }
+            else{setLogError(true)}
 
         } catch (error) {
-            console.log('login failed', error)
+            setLogError(true)
         }
+    }
+
+    function DisplayNotFound(){
+        if(logError){
+            return( 
+                <View style={{backgroundColor:GetColor(colorScheme.ColorB)}}>
+                    {StyleText("This username or password does not match the server")}
+                </View>)
+        }
+        else{return (<></>)}
     }
 
     return(
@@ -42,12 +55,13 @@ export default function LoginScreen(props){
             <View style={ {   flexDirection: "column",   }}>
                 <View >{StyleInputText(setStateUserName , "Username",userName)}   </View>
                 <View >{StyleInputText(setStatePassword, "Password",userPassword)}   </View>
-                    <View style={[{   flexDirection: "row"  }]}> 
-                        <View style ={[{flex:1}]}> {StyleButton(()=>dispatchCreateScreen(), "Create Profile")} </View>
-                        <View style ={[{flex:1}]}> {StyleButton(()=>TryLogin(), "Login")}</View>
-                    </View>
+                <View style={[{   flexDirection: "row"  }]}> 
+                    <View style ={[{flex:1}]}> {StyleButton(()=>dispatchCreateScreen(), "Create Profile")} </View>
+                    <View style ={[{flex:1}]}> {StyleButton(()=>TryLogin(), "Login")}</View>
+                </View>
             </View>
         </View>
+        <View> { DisplayNotFound()} </View>
 
     </View>)
 }

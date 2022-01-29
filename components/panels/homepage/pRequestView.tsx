@@ -20,7 +20,7 @@ export default function RequestView(props){
     const NullRequest:Request = {Amount: 0, RequestStatus:0,PostDate: 0}
     //=================================================
     const [RequestID, setSetRequest] = useState(NullRequest)
-    const [RequestType, setRequestType] = useState(RequestStatus.All)
+    const [RequestType, setRequestType] = useState(RequestStatus.Pending)
     const [ButtonDisplay, setButtonDisplay] = useState([<></>])
     const [isAdmin, AdminAccess] = useState(false)
 
@@ -104,7 +104,7 @@ export default function RequestView(props){
             <View style={{flex:1}}/>
         </View>
         <View style={{padding:10}}>
-        <StyleScrollView>
+            <StyleScrollView>
                 {ButtonDisplay}
             </StyleScrollView>
         </View>

@@ -4,7 +4,7 @@ import UserProfile from "../panels/homepage/pUserProfile";
 import RequestView from "../panels/homepage/pRequestView";
 import RequestCreation from "../panels/homepage/pRequestCreation";
 import DisplayRecords from "../panels/homepage/pDisplayRecords";
-import { View,Text } from "react-native";
+import { View,Text, Button } from "react-native";
 import { HorizontalLine, StyleText } from "../../BasicComponents/BasicComponent";
 import { textType } from "../../BasicComponents/StyleSheet";
 import AdminPage from "../adminTools/AdminPage";
@@ -13,6 +13,8 @@ import AdminPage from "../adminTools/AdminPage";
 export default function HomePage(){
     const [pageTitle, setPageTitle] = useState('Your Profile');
     const [ActiveTab, setActiveTab] = useState(0)
+
+    
 
     function change(index:number){
         setActiveTab(index)

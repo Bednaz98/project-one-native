@@ -2,9 +2,9 @@ import { Request } from "../../Project1-GitUtil-Reimbursement/Types/Entity";
 import { RequestStatus } from "../../Project1-GitUtil-Reimbursement/Types/Enums";
 import {v4} from 'uuid';
 import React, { useEffect, useState } from "react";
-import { Alert, Modal, StyleProp, View, ViewStyle } from "react-native";
+import { Alert, Modal, StyleProp, View, ViewStyle, StyleSheet} from "react-native";
 import { StyleButton, StyleInputText, StyleModal, StyleText } from "../../BasicComponents/BasicComponent";
-import { buttonType, textType } from "../../BasicComponents/StyleSheet";
+import { buttonType, colorScheme, GetColor, textType } from "../../BasicComponents/StyleSheet";
 import { sysContext } from "../wrappers/wProviderWrapper";
 import DataProcessor from "../../Project1-GitUtil-Reimbursement/Classes/DataProcessor";
 
@@ -87,8 +87,10 @@ export default function RequestSelectButton(props){
                 <View style={{flexDirection: 'column'}}>
                     <View> {StyleInputText(setSendMessage,'Message: ',sendMessage )}  </View>
                     <View style={{flexDirection: 'row'}} > 
-                        <View> {StyleButton(()=>DenyRequest(), 'Deny')} </View>
-                        <View> {StyleButton(()=>AcceptRequest(), 'Approve')} </View>
+                        <View style={{flex:1}}/>
+                        <View style={{flex:3}}> {StyleButton(()=>DenyRequest(), 'Deny')} </View>
+                        <View style={{flex:3}}> {StyleButton(()=>AcceptRequest(), 'Approve')} </View>
+                        <View style={{flex:1}}/>
                     <View> </View>
                 </View>
 
@@ -98,8 +100,10 @@ export default function RequestSelectButton(props){
         }
         else{
             if(InputRequest?.RequestStatus == RequestStatus.Pending){return (
-                <View>
-                    <View> {StyleButton(()=>DeleteRequest(), 'Delete')} </View>
+                <View style={{ padding:10, flexDirection:"row"}}>
+                    <View style={{flex:1}}/>
+                    <View style={{flex:3}}> {StyleButton(()=>DeleteRequest(), 'Delete')} </View>
+                    <View style={{flex:1}}/>
                 </View>
             )}
             return (<></>)
@@ -109,25 +113,96 @@ export default function RequestSelectButton(props){
     function GetInnerModal(){
         return(
         <View >
-            <View> {StyleText('Reimbursement', textType.HeaderSection)}  </View>
-            <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center',}}>
-                <View> {StyleText('Post Date') } </View> <View> {StyleText(ConvertPostedDate()) } </View>
-                <View> {StyleText('Modified date') } </View> <View> {StyleText(ConvertModDate()) } </View>
+            <View style={{flexDirection:"row", alignItems:"center", justifyContent:"center"}}>
+                <View style={{flex:1}}/>
+                <View style={{flex:1}}>  {StyleText('Reimbursement', textType.HeaderSection)} </View>
+                <View style={{flex:1}}/>
             </View>
-            <View style={{flexDirection: 'row',justifyContent: 'center', alignItems: 'center', backgroundColor:'#2233aa'}}>
+            <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center',}}>
+                <View style={{flexDirection:"row"}}> {StyleText('Post Date') }  {StyleText(ConvertPostedDate()) } </View>
+                <View style={{flexDirection:"row"}}> {StyleText('Modified date') } {StyleText(ConvertModDate()) } </View>
+            </View>
+            <View style={{flexDirection: 'row',justifyContent: 'center', alignItems: 'center'}}>
                 <View style ={{padding:5}} > {StyleText('Amount: ') } </View> <View style ={{padding:5}} > {StyleText('500') } </View>
                 <View style ={{padding:5}} > {StyleText('Status: ') } </View> <View style ={{padding:5}} > {StyleText(grabStatus()) } </View>
             </View>
-            <View style={{flexDirection: 'row'}}>  {StyleText('Request Reason: ')}  {StyleText(InputRequest.InputMessage)} </View>
-            <View style={{flexDirection: 'row'}}>  {StyleText('Manager Response: ')}  {StyleText(InputRequest.ManagerMessage)} </View>
+            <View style={{flexDirection:'column', backgroundColor:GetColor(colorScheme.ColorC) }}>
+                <View style={{flexDirection: 'row'}}>  {StyleText('Request Reason: ')}  {StyleText(InputRequest.InputMessage)} </View>
+                <View style={{flexDirection: 'row'}}>  {StyleText('Manager Response: ')}  {StyleText(InputRequest.ManagerMessage)} </View>
+            </View>
             <View >{  displayButtonOptions()  }</View>
-            <View style={{padding:10}} >{StyleButton(()=> setModalVisible(false), ' X ', buttonType.exist )}</View>
+            <View style={{ padding:10, flexDirection:"row"}} >
+                <View style={{flex:1}}/>
+                <View style={{flex:3}} >{StyleButton(()=> setModalVisible(false), ' X ', buttonType.exist )}</View>
+                <View style={{flex:1}}/>
+            </View>
         </View>)
     }
 
+
+    function Model(){
+        return(
+        <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {setModalVisible(!modalVisible);}}
+      >
+        <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+                {GetInnerModal()}
+            </View>
+        </View>
+      </Modal>)}
+      //{/* {StyleModal(modalVisible, setModalVisible, GetInnerModal())} */}
+
     return (
         <>
-            {StyleModal(modalVisible, setModalVisible, GetInnerModal())}
+            { Model()}
             {StyleButton(()=> setModalVisible(true),`${displayName} ${ConvertPostedDate()}: $${ InputRequest.Amount}, ${grabStatus()}` )}
         </>)
 }
+
+const styles = StyleSheet.create({
+    centeredView: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: 22
+    },
+    modalView: {
+      margin: 20,
+      backgroundColor:GetColor(colorScheme.ColorB),
+      borderRadius: 20,
+      padding: 35,
+      alignItems: "center",
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 2
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5
+    },
+    button: {
+      borderRadius: 20,
+      padding: 10,
+      elevation: 2
+    },
+    buttonOpen: {
+      backgroundColor: "#F194FF",
+    },
+    buttonClose: {
+      backgroundColor: "#2196F3",
+    },
+    textStyle: {
+      color: "white",
+      fontWeight: "bold",
+      textAlign: "center"
+    },
+    modalText: {
+      marginBottom: 15,
+      textAlign: "center"
+    }
+  })

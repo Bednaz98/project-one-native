@@ -119,11 +119,14 @@ export function ScrollViewStyle(){
 
 export function ModalStyle(){
     return StyleSheet.create( {modalView:{
+        flex:3,
+        marginTop: 22,
+        marginBottom: 15,
         margin: 20,
-        backgroundColor: GetColor(colorScheme.ColorB),
         borderRadius: 20,
         padding: 35,
         alignItems: "center",
+        justifyContent:"center",
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
