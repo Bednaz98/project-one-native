@@ -1,13 +1,14 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { Alert, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
+import { colorScheme, GetColor } from './BasicComponents/StyleSheet';
 import ConnectionSwitcher from './components/wrappers/wConnectionSwitcher';
 import SuperProvider from './components/wrappers/wProviderWrapper';
 
 export default function App() {
   //===============================================
   return (
-    <View style={{backgroundColor: '#444444', flex:1, alignItems:"center",justifyContent:"center" } }>
+    <View style={{backgroundColor: GetColor(colorScheme.ColorA), flex:1, alignItems:"center",justifyContent:"center" } }>
       <StatusBar style="auto" />
       <SuperProvider>
         <View style={{height:"auto", width:"auto", alignItems:"center",justifyContent:"center"}}>
