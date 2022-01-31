@@ -57,28 +57,31 @@ export default function RequestSelectButton(props){
         const Result = await FoundContext.HTTPHandler.ManagerChangeRequest(FoundContext.readUserProfile.id, InputRequest.id,RequestStatus.Approved,sendMessage)
         if(Result?.ReturnRequest){
             setSetRequest({...Result.ReturnRequest})
-            DisplayRequestButtons()
+            DisplayRequestButtons(RequestStatus.Approved)
             setSendMessage('')
             setModalVisible(false)
 
         }
+        return
     }
     async function DenyRequest(){
         const Result = await FoundContext.HTTPHandler.ManagerChangeRequest(FoundContext.readUserProfile.id, InputRequest.id,RequestStatus.Denied,sendMessage)
         if(Result?.ReturnRequest){
             setSetRequest({...Result.ReturnRequest})
-            DisplayRequestButtons()
+            DisplayRequestButtons(RequestStatus.Denied)
             setSendMessage('')
             setModalVisible(false)
         }
+        return
     }
     async function DeleteRequest(){
         const Result = await FoundContext.HTTPHandler.DeleteRequest(FoundContext.readUserProfile.id, InputRequest.id)
         if(Result.ResultCheck){
-            DisplayRequestButtons()
+            DisplayRequestButtons(RequestStatus.deleted)
             setSendMessage('')
             setModalVisible(false)
         }
+        return
     }
 
     function displayButtonOptions(){

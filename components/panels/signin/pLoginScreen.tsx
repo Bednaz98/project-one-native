@@ -1,12 +1,12 @@
 import React, { useState } from "react"
 import { View } from "react-native"
 import loadingIcon, { StyleButton, StyleInputText, StyleText } from "../../../BasicComponents/BasicComponent"
-import { colorScheme, GetColor, textType } from "../../../BasicComponents/StyleSheet"
+import { colorScheme, GetColor, InputTextType, textType } from "../../../BasicComponents/StyleSheet"
 import { LoginReturn } from "../../../Project1-GitUtil-Reimbursement/Types/dto"
 import { sysContext } from "../../wrappers/wProviderWrapper"
 
 
-export default function LoginScreen(props){
+export default function LoginScreen(props:any){
     // Basic setup to get all context and dispatcher short hand %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     const FoundContext = React.useContext(sysContext)
     /**this function is used get to grab the HTTP handler as a short hand*/
@@ -16,6 +16,7 @@ export default function LoginScreen(props){
     const [userPassword, setStatePassword] = useState('')
     const [userName, setStateUserName] = useState('')
     const [logError, setLogError] = useState(false);
+    const [Show, setShow] = useState(true);
 
     async function TryLogin(){
         let Login:LoginReturn;
@@ -49,12 +50,12 @@ export default function LoginScreen(props){
     return(
     <View style={{alignItems:"center",justifyContent:"center"}}>
         <View>
-            {StyleText("Stark-Tower Reimburs ™", textType.PageTitle)} 
+            {StyleText("Stark-Tower Reimburse ™", textType.PageTitle)} 
         </View>
         <View>
             <View style={ {   flexDirection: "column",   }}>
                 <View >{StyleInputText(setStateUserName , "Username",userName)}   </View>
-                <View >{StyleInputText(setStatePassword, "Password",userPassword)}   </View>
+                <View >{StyleInputText(setStatePassword, "Password",userPassword, true, ()=>{ setShow(!Show)},InputTextType.normal, "Show",Show)}   </View>
                 <View style={[{   flexDirection: "row"  }]}> 
                     <View style ={[{flex:1}]}> {StyleButton(()=>dispatchCreateScreen(), "Create Profile")} </View>
                     <View style ={[{flex:1}]}> {StyleButton(()=>TryLogin(), "Login")}</View>

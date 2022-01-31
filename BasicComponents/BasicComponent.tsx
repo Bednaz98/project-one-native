@@ -22,11 +22,10 @@ export function StyleButton(func:Function, text:string, type:buttonType =buttonT
     </View>)
 }
 
-export function StyleInputText(onChangeText:Function,Label:string,textValue:string, ShowSubmit:boolean = false, subFunc?:Function ,type:InputTextType=InputTextType.normal){
+export function StyleInputText(onChangeText:Function,Label:string,textValue:string, ShowButton:boolean = false, subFunc?:Function ,type:InputTextType=InputTextType.normal, ButtonText:string = 'Submit' ,Password:boolean=false){
     function ShowSubmitButton(){
-        if(ShowSubmit)  { return <View style={{flex:1}}> {StyleButton(subFunc, 'Submit', buttonType.inputField )} </View> }
+        if(ShowButton)  { return <View style={{flex:1}}> {StyleButton(subFunc, ButtonText, buttonType.inputField )} </View> }
     }
-
     return (
         <View style={[{padding: 3}]}> 
             <View style={[ {flexDirection: "row", }]}>
@@ -34,7 +33,7 @@ export function StyleInputText(onChangeText:Function,Label:string,textValue:stri
                     {StyleText(Label,textType.InputText )}
                 </View>
                 <View  style={[{flex:4, padding: 1,...iTSB(type)}]}> 
-                    <TextInput  style={ InputTextComponentStyle(type)}  onChangeText={(e)=>onChangeText(e)} value={textValue}/>
+                    <TextInput  style={ InputTextComponentStyle(type)}  onChangeText={(e)=>onChangeText(e)} value={textValue} secureTextEntry = {Password}/>
                 </View>
                 {ShowSubmitButton()}
             </View>

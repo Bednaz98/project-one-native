@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { View } from "react-native";
 import { StyleButton, StyleInputText, StyleText } from "../../../BasicComponents/BasicComponent";
+import { InputTextType } from "../../../BasicComponents/StyleSheet";
 import { LoginReturn } from "../../../Project1-GitUtil-Reimbursement/Types/dto";
 import { sysContext } from "../../wrappers/wProviderWrapper"
 
@@ -95,9 +96,10 @@ export default function UserProfile(){
             <View >{StyleText( `Username: ${FoundContext .readUserProfile.id} `) }   </View>
             <View >{StyleInputText(setFirstName , "First Name",firstName, true, ()=>{changeFirstName()})}   </View>
             <View >{StyleInputText(setLastName , "Last Name",lastName , true,()=>{changeLastName()})}   </View>
-            <View >{StyleInputText(setPassword , "Password",password, true, ()=>{changePassword()})}   </View>
+            <View >{StyleInputText(setPassword , "Password",password, true, ()=>{changePassword()},InputTextType.normal,'Show' ) }   </View>
             <View style={{flexDirection:"row"}}>{StyleText('Manager: ')}  {StyleText(managerName)}  </View>
         </View>
     </>)
 }
+//,type:InputTextType=InputTextType.normal, ButtonText:string = 'Submit' , Password:boolean=false
 

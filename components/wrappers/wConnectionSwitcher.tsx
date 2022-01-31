@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { View } from "react-native"
-import loadingIcon, { StyleText } from "../../BasicComponents/BasicComponent"
+import { StyleText } from "../../BasicComponents/BasicComponent"
 import { textType } from "../../BasicComponents/StyleSheet"
 import HomePage from "../page/HomePage"
 import NoConnectionScreen from "../page/NoConnectionScreen"
@@ -38,7 +38,6 @@ export default function ConnectionSwitcher(){
         return(
         <View>
             {StyleText("Connecting to Servers",textType.PageTitle)}
-            {loadingIcon()}
         </View>)
 
     }

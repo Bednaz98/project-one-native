@@ -27,7 +27,7 @@ export default function RequestView(props){
 
 
     useEffect(() => {
-        DisplayRequestButtons();
+        FilterSearch(RequestType);
         if(mode){checkAdmin()}
         return () => {}}, []);
 
@@ -39,28 +39,30 @@ export default function RequestView(props){
             AdminAccess(false)
         }
     }
-    async function DisplayRequestButtons(){
+    async function DisplayRequestButtons(type:RequestStatus){
         if(mode){
+            console.log('ManagerMode')
             let transferArray:TransferRequestArray;
             try {
                 console.log('manager refresh')
-                transferArray = await FoundContext.HTTPHandler.ManagerGetAllRequest(FoundContext.readUserProfile.id)
+                transferArray = await FoundContext.HTTPHandler.ManagerGetAllRequest(FoundContext.readUserProfile.id,type)
                 console.log('no error')
                 if(! (transferArray.ReturnRequestArray.length >0) ) { 
                     setButtonDisplay([ StyleText('No Request Found') ] );return;
                 } 
                 else{
-                    setButtonDisplay(   transferArray.ReturnRequestArray.map( (e)=> <RequestSelectButton key = {v4()} InputRequest ={e} setSetRequest={setSetRequest} ManagerMode={mode}/>) )
+                    setButtonDisplay(   transferArray.ReturnRequestArray.map( (e)=> <RequestSelectButton key = {v4()} InputRequest ={e} setSetRequest={setSetRequest} ManagerMode={mode} DisplayRequestButtons={FilterSearch}/>) )
                 }
             } catch (error) {
                 setButtonDisplay([ StyleText('No Request Found') ] );return;
             }
         }
         else{
+            console.log('general fetch')
             let transferArray:TransferRequestArray;
             try {
                 console.log('general refresh')
-                transferArray = await FoundContext.HTTPHandler.GetAllSentRequestOfType(FoundContext.readUserProfile.id, RequestType)
+                transferArray = await FoundContext.HTTPHandler.GetAllSentRequestOfType(FoundContext.readUserProfile.id, type)
             } catch (error) {
                 setButtonDisplay([StyleText('No Request Found')] );return;
             }
@@ -68,15 +70,15 @@ export default function RequestView(props){
                 setButtonDisplay([StyleText('No Request Found')] )
                 return;
             } 
-            setButtonDisplay(   transferArray.ReturnRequestArray.map( (e)=> <RequestSelectButton key = {v4()} InputRequest ={e} setSetRequest={setSetRequest} DisplayRequestButtons={DisplayRequestButtons}/>) )
+            setButtonDisplay(   transferArray.ReturnRequestArray.map( (e)=> <RequestSelectButton key = {v4()} InputRequest ={e} setSetRequest={setSetRequest} ManagerMode={mode}  DisplayRequestButtons={FilterSearch}/>) )
         }
         
     }
+
+
     function FilterSearch(type:RequestStatus){
         setRequestType(type);
-        setTimeout(() => {
-            DisplayRequestButtons();
-        }, 50);
+        DisplayRequestButtons(type)
     }
 
     function displayAdminButton(){
@@ -100,7 +102,7 @@ export default function RequestView(props){
         </View>
         <View style={{flexDirection:"row"}}>
             <View style={{flex:1}}/>
-            <View style={{flex:6}}> {StyleButton( ()=> {()=>DisplayRequestButtons();} , 'Refresh') }  </View>
+            <View style={{flex:6}}> {StyleButton( ()=> {()=>DisplayRequestButtons(RequestType);} , 'Refresh') }  </View>
             <View style={{flex:1}}/>
         </View>
         <View style={{padding:10}}>
