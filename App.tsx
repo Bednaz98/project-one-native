@@ -8,7 +8,7 @@ import SuperProvider from './components/wrappers/wProviderWrapper';
 export default function App() {
   //===============================================
   return (
-    <View style={{backgroundColor: GetColor(colorScheme.ColorA), flex:1, alignItems:"center",justifyContent:"center" } }>
+    <View style={{backgroundColor: GetColor(colorScheme.ColorC), flex:1, alignItems:"center",justifyContent:"center" } }>
       <StatusBar style="auto" />
       <SuperProvider>
         <View style={{height:"auto", width:"auto", alignItems:"center",justifyContent:"center"}}>
