@@ -3,6 +3,10 @@ import { StyleSheet} from "react-native";
 import { sysContext } from "../components/wrappers/wProviderWrapper"
 
 
+export enum Theme{
+    default,
+    lime
+}
 export enum colorScheme{
     ColorA,
     ColorB,
@@ -13,9 +17,9 @@ export enum colorScheme{
 }
 
 export function GetColor(type:colorScheme){
-    const t:theme =0;
+    const t:Theme =1;
     switch(t){
-        case theme.default:{
+        case Theme.default:{
             switch(type){
                 case colorScheme.ColorA:{ return  `#000108` }
                 case colorScheme.ColorB:{ return  `#333138` }
@@ -26,26 +30,20 @@ export function GetColor(type:colorScheme){
                 default:                { return  `#cc312E` }
             }
         }
-        case theme.light:{
+        case Theme.lime:{
             switch(type){
-                case colorScheme.ColorA:{ return  `#553377` }
-                case colorScheme.ColorB:{ return  `#882275` }
-                case colorScheme.ColorC:{ return  `#996633` }
-                case colorScheme.ColorD:{ return  `#445566` }
-                case colorScheme.ColorE:{ return  `#227337` }
-                case colorScheme.ColorF:{ return  `#993366` }
+                case colorScheme.ColorA:{ return  `#1B4079` }
+                case colorScheme.ColorB:{ return  `#4D7C8A` }
+                case colorScheme.ColorC:{ return  `#7F9C96` }
+                case colorScheme.ColorD:{ return  `#8FAD88` }
+                case colorScheme.ColorE:{ return  `#CBDF90` }
+                case colorScheme.ColorF:{ return  `#FFFFFF` }
                 default:                { return  `#882255` }
             }
         }
     }
 }
 
-
-
-export enum theme{
-    default,
-    light
-}
 
 //==========================================
 export enum textType{
